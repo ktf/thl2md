@@ -7,6 +7,7 @@ from sys import exit
 class TheHitListApp (object):
   def __init__ (self):
     self.__app = app('The Hit List')
+    self.__people = ["/" + tag.name.get() for tag in self.__app.tags_group.groups["PEOPLE"].tags.get ()]
 
   def getFolderByName (self, name):
     group = self.__app.folders_group
@@ -24,6 +25,18 @@ class TheHitListApp (object):
       group = newGroup
     return group
   
+  def dumpTask (self, task, depth = 0):
+    indent = " ".join(["" for x in xrange(depth)])
+    print indent + "* " + task.title.get ()
+    note = task.notes.get ()
+    if note:
+      print
+      for l in note.split("\n"):
+        print indent + "  " + note
+      print
+    for childTask in task.tasks.get():
+      self.dumpTask (childTask, depth + 3)
+  
   def dump (self, folder):
     try:
       tasks = folder.tasks.get()
@@ -34,20 +47,14 @@ class TheHitListApp (object):
       exit(1)
       
     for task in folder.tasks.get():
-      print "## " + task.title.get ()
-      print 
-      note = task.notes.get ()
-      if note:
-        print note
-        print
-      print
-        
+      self.dumpTask (task)
   
 if __name__ == "__main__":
   hl = TheHitListApp()
   parser = OptionParser ()
   opts, args = parser.parse_args ()
   args = args or ["<no folder specified>"]
+  
   
   for name in args:
     folder = hl.getFolderByName (name)

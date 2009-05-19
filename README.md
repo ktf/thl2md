@@ -15,9 +15,5 @@ First install appscript
 
 and then simply copy thl2md somewhere in your path.
 
-# KNOWN BUGS:
-
-* Does not handle sub-tasks
-
 [hitlist]: http://www.potionfactory.com/thehitlist
 [markdown]: http://daringfireball.net/projects/markdown
