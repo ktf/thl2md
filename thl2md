@@ -47,7 +47,8 @@ if __name__ == "__main__":
   hl = TheHitListApp()
   parser = OptionParser ()
   opts, args = parser.parse_args ()
-
+  args = args or ["<no folder specified>"]
+  
   for name in args:
     folder = hl.getFolderByName (name)
     print "# " + folder.name.get ()
