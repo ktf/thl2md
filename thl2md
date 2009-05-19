@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+
+from appscript import app
+from optparse import OptionParser
+from sys import exit
+
+class TheHitListApp (object):
+  def __init__ (self):
+    self.__app = app('The Hit List')
+
+  def getFolderByName (self, name):
+    group = self.__app.folders_group
+  
+    for name in name.split ("/"):
+      newGroup = group.groups[name]
+
+      try:
+        newGroup.get()
+      except:
+        print "Could not find %s. Candidates are:" % (name)
+        for x in group.groups.get ():
+          print "* '%s'" % x.name.get ()
+        exit(1)
+      group = newGroup
+    return group
+  
+  def dump (self, folder):
+    try:
+      tasks = folder.tasks.get()
+    except:
+      print "No tasks in folder. Maybe you want to try for one of its lists:"
+      for x in folder.groups.get ():
+        print "* '%s'" % x.name.get ()
+      exit(1)
+      
+    for task in folder.tasks.get():
+      print "## " + task.title.get ()
+      print 
+      note = task.notes.get ()
+      if note:
+        print note
+        print
+      print
+        
+  
+if __name__ == "__main__":
+  hl = TheHitListApp()
+  parser = OptionParser ()
+  opts, args = parser.parse_args ()
+
+  for name in args:
+    folder = hl.getFolderByName (name)
+    print "# " + folder.name.get ()
+    print
+    hl.dump (folder)
